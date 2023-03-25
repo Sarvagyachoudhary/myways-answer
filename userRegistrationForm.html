@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form</title>
+</head>
+<body>
+    <div class="container">
+        <form id="user-form">
+            <label for="name"> Name*</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email"> Email*</label>
+            <input type="text" id="email" name="email" required>
+            
+            <label for="phone">Phone*</label>
+            <input type="text" id="phone" name="phone" required>
+
+            <input type="submit" value="Submit">
+        </form>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        const form = document.querySelector('#user-form');
+        const alert = document.querySelector('#alert');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = form.name.value;
+            const email = form.email.value;
+            const phone = form.phone.value;
+
+            try{
+                const getUser = await fetch(` https://test-api-v3.myways.ai/user?email=${email}`, {method:'GET'} )
+                const userExists = await getUser.json()'
+                
+                if(userExists.error){
+                    alert.innerHTML = 'User Found';
+                    alert.style.display = 'block';
+                }
+                else {
+                    const createUser = await fetch('https://test-api-v3.myways.ai/user', {
+                        method:'POST',
+                        headers:{
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({name, email, phone}),
+                    });
+                    const userCreated = await createUser.json();
+
+                    alert.innerHTML = "User Created Successfully";
+                    alert.style.display = 'block';
+                }   
+            }
+            catch (error){
+                alert.innerHTML = "Error Creating user";
+                alert.style.display = 'block';
+                }                  
+        });
+    </script>
+</body>
+</html>
