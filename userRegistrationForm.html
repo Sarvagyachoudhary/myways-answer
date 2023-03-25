@@ -40,8 +40,7 @@
                 if(userExists.error){
                     alert.innerHTML = 'User Found';
                     alert.style.display = 'block';
-                }
-                else {
+             
                     const createUser = await fetch('https://test-api-v3.myways.ai/user', {
                         method:'POST',
                         headers:{
